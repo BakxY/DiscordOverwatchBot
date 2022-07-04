@@ -1,0 +1,1 @@
+Put your Apex and Discord tokens here. Use APEX_TOKEN.txt for your Apex token and DISCORD_TOKEN.txt for your Discord token.

@@ -13,10 +13,12 @@
     "@types/sharp": "^0.30.4",
     "discord.js": "^13.8.1",
     "glob-parent": "^6.0.2",
-    "image-downloader": "^4.3.0",
     "images": "^3.2.4",
+    "jimp": "^0.16.0",
     "jpeg-js": "^0.4.4",
-    "overwatch-stats-api": "^2.1.0",
-    "sharp": "^0.30.7"
+    "overwatch-stats-api": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.1"
   }
 }

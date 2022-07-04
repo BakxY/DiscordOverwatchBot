@@ -1,36 +1,31 @@
-import ow from 'overwatch-stats-api'
-import images from 'images'
-import ImageDownloader from 'image-downloader'
-import sharp from 'sharp'
+import Discord, { Intents } from 'discord.js'
 
-(async () => {
-    const stats = await ow.getAllStats('BakxY-21794', 'pc');
-    console.log(stats);
-    await ImageDownloader.image({
-        url: stats['starsURL'],
-        dest: __dirname + '/stars.png',
-    });
-    await ImageDownloader.image({
-        url: stats['borderURL'],
-        dest: __dirname + '/border.png',
-    });
-    await ImageDownloader.image({
-        url: stats['iconURL'],
-        dest: __dirname + '/icon.png',
-    });
-    //await images(__dirname + '/Blank.png')
-    //    .draw(images(__dirname + '/icon.png'), 64, 64)
-    //    .save(__dirname + '/output.png');
 
-    sharp(__dirname + '/output.png')
-    .extractChannel(__dirname + '/mask.png')
-    .toFile(__dirname + '/lol.png')
-    
-    //images(__dirname + '/Blank.png')
-    //    .draw(images(__dirname + '/icon.png'), 64, 64)
-    //    .draw()
-    //    .save(__dirname + '/output.png');
+// import custom functions
+import { getDiscordToken} from './get-tokens'
 
-    //.draw(images(__dirname + '/stars.png'), 0, 120)
-    //.draw(images(__dirname + '/border.png'), 0, 0)
-})();
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
+
+// event triggered when the bot has connected and is ready
+client.on('ready', () => {
+
+    // get commandhandler from file
+    let commandHandler = require('./command-handler')
+
+    // commandhandler has a default object
+    if(commandHandler.default)
+    {
+        // set commandhandler to the default export
+        commandHandler = commandHandler.default
+    }
+
+    // create a new commandhandler
+    commandHandler(client)
+
+    // print to cli that the bot is ready
+    console.log('[INFO] Bot has connected to discord and is ready')
+
+})
+
+// start the client with the token
+client.login(getDiscordToken())
