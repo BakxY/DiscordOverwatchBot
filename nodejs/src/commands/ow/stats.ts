@@ -5,11 +5,21 @@ import ow from 'overwatch-stats-api'
 
 export default {
     callback: async (ctx: Message, ...args: string[]) => {
-        // get message content
-        var ctxMessage = ctx.content
+        var UserLinked = false
+
+        var UserData = require('./../../resources/data/users');
+
+        for(var i in UserData)
+        {
+            if(i == ctx.author.id)
+            {
+                UserLinked = true
+                break
+            }
+        }
 
         // check if argument was given
-        if(ctxMessage != '?stats')
+        if(UserLinked)
         {
             const stats = await ow.getAllStats('BakxY-21794', 'pc');
             console.log(stats);
@@ -49,7 +59,7 @@ export default {
         {
             // no argument was provided
             ctx.reply({
-                content: 'No player specified',
+                content: 'You are not linked with a battletag',
                 allowedMentions:{
                     repliedUser: false
                 }
