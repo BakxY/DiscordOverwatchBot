@@ -1,6 +1,8 @@
 import { Message, ReplyMessageOptions, MessageEmbed } from 'discord.js'
+import { reverse } from 'dns'
 import Jimp from 'jimp'
 import ow from 'overwatch-stats-api'
+import { hero } from 'overwatch-stats-api/typings/autogen'
 
 
 export default {
@@ -14,23 +16,35 @@ export default {
             if(i == ctx.author.id)
             {
                 UserLinked = true
-                break
+                //break
             }
         }
 
         // check if argument was given
         if(UserLinked)
         {
-            const stats = await ow.getAllStats('BakxY-21794', 'pc');
-            console.log(stats);
-        
+            const stats = await ow.getAllStats(UserData[ctx.author.id], 'pc')
+            
+            console.log(stats['mostPlayed']['quickplay'])
+
             var Thumbnail = await Jimp.read('resources/images/blank.png')
             var mask = await Jimp.read('resources/images/mask.png')
         
             var icon = await Jimp.read(stats['iconURL'])
             var border = await Jimp.read(stats['borderURL'])
-            var stars = await Jimp.read(stats['starsURL'])
+
+            var stars
+
+            if(stats['starsURL'] != undefined)
+            {
+                stars = await Jimp.read(stats['starsURL'])
+            }
+            else
+            {
+                stars = await Jimp.read('resources/images/blank.png')
+            }
             
+
             Thumbnail.composite(icon, 64, 64)
                      .mask(mask, 0, 0)
                      .composite(border, 0, 0)
@@ -43,6 +57,38 @@ export default {
             .setTitle(stats['battletag'] + '\'s stats')
             .setThumbnail('attachment://icon.png')
             .setTimestamp()
+
+            embedVar.addField('Level', (Number.parseInt(stats['level']) + stats['prestige'] * 100).toString(), true)
+            embedVar.addField('Endorsement level', stats['endorsementLevel'], true)
+            
+            var mostPlayedHero:hero = 'mercy'
+
+            for(var name in stats['mostPlayed']['quickplay'])
+            {
+                mostPlayedHero = name as hero
+                break
+            }
+
+            var PlayTimeArray = stats['mostPlayed']['quickplay'][mostPlayedHero]['time'].split(':')
+
+            console.log(PlayTimeArray)
+
+            PlayTimeArray.reverse()
+
+            console.log(PlayTimeArray)
+
+
+            PlayTimeArray[0] += ' seconds'
+            PlayTimeArray[1] += ' minutes'
+            PlayTimeArray[2] += ' hours'
+
+            console.log(PlayTimeArray)
+
+            PlayTimeArray.reverse()
+
+            console.log(PlayTimeArray)
+
+            embedVar.addField('Most played in QP', mostPlayedHero.charAt(0).toUpperCase() + mostPlayedHero.slice(1) + ' with ', false)
 
              ctx.reply({
                 embeds: [embedVar],
