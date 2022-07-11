@@ -51,7 +51,7 @@ export default {
 
             // Declare a new embed
             var embedVar = new MessageEmbed()
-            .setColor(0xEF2AEF)
+            .setColor(0xF99E1A)
             .setTitle(stats['battletag'] + '\'s stats')
             .setThumbnail('attachment://icon.png')
             .setTimestamp()
