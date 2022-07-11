@@ -1,0 +1,1 @@
+Put your Discord token here. Use DISCORD_TOKEN.txt for your Discord token.
