@@ -24,8 +24,6 @@ export default {
         if(UserLinked)
         {
             const stats = await ow.getAllStats(UserData[ctx.author.id], 'pc')
-            
-            console.log(stats['mostPlayed']['quickplay'])
 
             var Thumbnail = await Jimp.read('resources/images/blank.png')
             var mask = await Jimp.read('resources/images/mask.png')
@@ -71,24 +69,38 @@ export default {
 
             var PlayTimeArray = stats['mostPlayed']['quickplay'][mostPlayedHero]['time'].split(':')
 
-            console.log(PlayTimeArray)
+            PlayTimeArray.reverse()
+
+            if(PlayTimeArray[0] != '00' && PlayTimeArray[0] != undefined)
+            {
+                PlayTimeArray[0] += 'sec'
+            }
+            else
+            {
+                delete PlayTimeArray[0]
+            }
+
+            if(PlayTimeArray[1] != '00' && PlayTimeArray[1] != undefined)
+            {
+                PlayTimeArray[1] += 'min'
+            }
+            else
+            {
+                delete PlayTimeArray[1]
+            }
+
+            if(PlayTimeArray[2] != '00' && PlayTimeArray[2] != undefined)
+            {
+                PlayTimeArray[2] += 'hrs'
+            }
+            else
+            {
+                delete PlayTimeArray[2]
+            }
 
             PlayTimeArray.reverse()
 
-            console.log(PlayTimeArray)
-
-
-            PlayTimeArray[0] += ' seconds'
-            PlayTimeArray[1] += ' minutes'
-            PlayTimeArray[2] += ' hours'
-
-            console.log(PlayTimeArray)
-
-            PlayTimeArray.reverse()
-
-            console.log(PlayTimeArray)
-
-            embedVar.addField('Most played in QP', mostPlayedHero.charAt(0).toUpperCase() + mostPlayedHero.slice(1) + ' with ', false)
+            embedVar.addField('Most played in QP', mostPlayedHero.charAt(0).toUpperCase() + mostPlayedHero.slice(1) + ' with ' + PlayTimeArray.join(' '), false)
 
              ctx.reply({
                 embeds: [embedVar],
